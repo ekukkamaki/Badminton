@@ -1,0 +1,9 @@
+.tscache
+.baseDir.ts
+dist
+node_modules
+.vs
+NodeApp.njsproj
+/src/server.js
+src/routes/*.js
+src/routes/*.js.map
