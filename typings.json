@@ -1,0 +1,14 @@
+﻿{
+  "name": "pg-promise-demo",
+  "dependencies": {
+    "express": "registry:dt/express",
+    "express-serve-static-core": "registry:dt/express-serve-static-core",
+    "mime": "registry:dt/mime",
+    "serve-static": "registry:dt/serve-static",
+    "bluebird": "registry:npm/bluebird",
+    "body-parser": "registry:dt/body-parser",
+    "morgan": "registry:dt/morgan",
+    "errorHandler": "registry:dt/errorhandler",
+    "method-override": "registry:dt/method-override"    
+  }
+}
