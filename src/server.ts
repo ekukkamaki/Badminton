@@ -1,11 +1,12 @@
 ﻿import * as bodyParser from "body-parser";
-import * as cookieParser from "cookie-parser";
 import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import { IndexRoute } from "./routes/index";
+
+import db = require('./db/dbBase');
 
 /**
  * The server.
@@ -55,7 +56,25 @@ export class Server {
      * @method api
      */
     public api() {
-        //empty for now
+        this.GET('/test', db.match.total);
+
+        this.app.post("/season/insert", (req, res) => {
+
+            if (!req.body || !req.body.year || !req.body.quarter || req.body.quarter > 3)
+                res.send(404, "missing member");
+
+            if (!req.body.description)
+                res.send(404, 'Description missing');
+
+            db.season.insert(req.body.year, req.body.quarter, req.body.description)
+                .then((data: any) => {
+                    console.log('inserted succesfully', data);
+                    res.json({
+                        success: true,
+                        inserted_id: data
+                    });
+                });
+        });
     }
 
     /**
@@ -84,7 +103,7 @@ export class Server {
         }));
 
         //use cookie parker middleware middlware
-        this.app.use(cookieParser("SECRET_GOES_HERE"));
+        //this.app.use(cookieParser("SECRET_GOES_HERE"));
 
         //use override middlware
         this.app.use(methodOverride());
@@ -115,5 +134,22 @@ export class Server {
 
         //use router middleware
         this.app.use(router);
+    }
+    public GET(url: string, handler: (req: any) => any) {
+        this.app.get(url, (req, res) => {
+            handler(req)
+                .then((data: any) => {
+                    res.json({
+                        success: true,
+                        data
+                    });
+                })
+                .catch((error: any) => {
+                    res.json({
+                        success: false,
+                        error: error.message || error
+                    });
+                });
+        });
     }
 }
